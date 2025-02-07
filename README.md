@@ -33,6 +33,3 @@ puesto que sin el suficiente voltaje los motores no trabajaran óptimamente.
 El lenguaje implementado fue Circuitphyton, se debe tener en cuenta a la hora de 
 correr el código la implementación de las librerias necesarias, de lo contrario el 
 código generará errores al no poder importar dichas librerías.
-
-
-correr el cófig
