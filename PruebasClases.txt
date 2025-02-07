@@ -1,0 +1,97 @@
+######Este documento refiere a distintos códigos pruebas de clases que querían ser implementadas al proyecto 
+para mejorar el tiempo de vuelta, tales como la clase precepton que consistía en una neurona de 3 entradas, 
+una para cada reglón de pixeles (Superior, central, inferior) y 2 salidas, correspondientes a los PWM.
+Además se quería implementar una herramienta para aprendizaje por refuerzo llamada Qlearning la cual
+utiliza los píxeles de la cámara como entradas para el estado. Se ajusta los valores Q en base a la recompensa
+recibida y las expectativas futuras, permitiendo al agente aprender a maximizar sus recompensas.
+Sin embargo, a la hora de agregar estos bloques de código a nuestro proyecto el carro no funcionaba de la
+misma manera y generaba muchos errores en el tema de las librerías, por tanto preferimos dejar el proyecto
+con las utilidades básicas, dejamos este archivo para aquellos que quieran intentar implementarlo en su proyecto
+y para que puedan editarlo a su conveniencia.
+
+#######################################################
+# Inicialización del perceptrón
+# class Perceptron:
+#     def __init__(self, num_inputs):
+#         # Inicializa los pesos y el sesgo
+#         self.weights = [0.0] * num_inputs
+#         self.bias = 0.0
+# 
+#     def predict(self, inputs):
+#         # Realiza la predicción basada en las entradas y los pesos
+#         activation = sum(x * w for x, w in zip(inputs, self.weights)) + self.bias
+#         return 1 if activation >= 0 else 0
+# 
+#     def train(self, training_inputs, labels, learning_rate=0.1, epochs=10):
+#         # Entrena el perceptrón ajustando los pesos
+#         for epoch in range(epochs):
+#             print(f"Epoch {epoch + 1}:")
+#             for inputs, label in zip(training_inputs, labels):
+#                 prediction = self.predict(inputs)
+#                 error = label - prediction
+#                 # Actualiza los pesos basado en el error y la tasa de aprendizaje
+#                 self.weights = [w + learning_rate * error * x for x, w in zip(inputs, self.weights)]
+#                 self.bias += learning_rate * error
+#                 # Imprime los pesos y el sesgo después de cada actualización
+#                 print(f"Weights: {self.weights}, Bias: {self.bias}")
+        
+
+##################################################
+                
+# perceptron = None
+# # Verifica si el botón está presionado para entrenar el perceptrón
+# #button_pin = board.GP22
+# #button = digitalio.DigitalInOut(button_pin)
+# #button.switch_to_input(pull=digitalio.Pull.UP)
+# 
+# # Variable global para almacenar el valor del PWM del perceptrón
+# perceptron_pwm_value = 100
+# 
+# # Función para entrenar el perceptrón cuando se presiona el botón A
+# def train_perceptron():
+#     global pwm_value
+#     perceptron = Perceptron(num_inputs=3)  # Inicializar el perceptrón con el número de características de entrada
+#     training_inputs = [[1, 1, 1], [0, 1, 1], [0, 0, 0],[1, 1, 1], [0, 1, 1], [0, 0, 0],[1, 1, 1], [0, 1, 1], [0, 0, 0],[1, 1, 1], [0, 1, 1], [0, 0, 0],
+#                        [1, 1, 1], [0, 1, 1], [0, 0, 0],[1, 1, 1], [0, 1, 1], [0, 0, 0]]  # Datos de entrenamiento
+#     labels = [1, 1, 0,1, 1, 0,1, 1, 0,1, 1, 0,1, 1, 0,1, 1, 0]  # Ejemplo de etiquetas correspondientes
+#     perceptron.train(training_inputs, labels, learning_rate=0.1, epochs=5)  # Entrenar el perceptrón con los datos de entrenamiento durante varias épocas
+#     # Hacer una predicción con valores arbitrarios para obtener el valor de PWM
+#     pwm_value = perceptron.predict([1, 1, 1]) * 65530  # Ajustar el valor de PWM basado en la predicción del perceptrón
+# 
+# # Inicializar el perceptrón al principio
+# train_perceptron()
+
+
+
+######## Aprendizaje por refuerzo
+# class QLearningAgent:
+#     def __init__(self, num_states, num_actions, alpha=0.1, gamma=0.9, epsilon=0.1):
+#         # Inicialización del agente Q-learning con los parámetros dados
+#         self.num_states = num_states   # Número de posibles estados
+#         self.num_actions = num_actions # Número de posibles acciones
+#         self.alpha = alpha             # Tasa de aprendizaje
+#         self.gamma = gamma             # Factor de descuento
+#         self.epsilon = epsilon         # Parámetro de exploración
+#         self.q_table = np.zeros((num_states, num_actions)) # Inicialización de la tabla Q con ceros
+# 
+#     def choose_action(self, state):
+#         # Selección de una acción basada en la política epsilon-greedy
+#         if random.uniform(0, 1) < self.epsilon:
+#             # Exploración: selecciona una acción aleatoria
+#             return random.randint(0, self.num_actions - 1)
+#         else:
+#             # Explotación: selecciona la acción con el mayor valor Q para el estado dado
+#             return np.argmax(self.q_table[state])
+# 
+#     def update(self, state, action, reward, next_state):
+#         # Actualización de la tabla Q usando la fórmula de Q-learning
+#         best_next_action = np.argmax(self.q_table[next_state]) # Mejor acción en el próximo estado
+#         td_target = reward + self.gamma * self.q_table[next_state, best_next_action] # Objetivo de TD (Temporal Difference)
+#         td_error = td_target - self.q_table[state, action] # Error de TD
+#         self.q_table[state, action] += self.alpha * td_error # Actualización de la tabla Q
+# 
+#     def get_state(self, pixels):
+#         # Lógica para convertir los píxeles en un estado
+#         binary_pixels = [1 if pixel < 100 else 0 for pixel in pixels] # Binariza los píxeles (1 si el valor es menor a 100, 0 en caso contrario)
+#         state = sum([binary_pixels[i] << i for i in range(len(binary_pixels))]) # Convierte la lista de píxeles binarios en un único estado entero
+#         return state
