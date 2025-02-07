@@ -4,7 +4,7 @@ import pwmio
 import digitalio
 import busio
 import board
-#import adafruit_ssd1306
+
 vel_ini_derecha=85;
 vel_ini_izquierda=85;
 
